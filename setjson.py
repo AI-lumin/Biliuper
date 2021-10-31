@@ -5,6 +5,7 @@
 
 import dojson
 import os
+import traceback
 
 json_path = ".//setting.json"
 
@@ -27,17 +28,18 @@ def bool_input():
 
 def add_uploader():
     # print(f'现在有{len(dojson.get_namelist())}个房间')
-    if input('请输入要加入的房间数(不超过20,默认为1):') != None:
-        num = 1
+    num_str = input('请输入要加入的房间数(不超过20,默认为1):')
+    if num_str.isdigit():
+        num = int(num_str)     
     else:
-        num = int(input())
-    # print(num)
-    if 1<=num<=20:
+        num = 1
+    print(num)
+    if num in range(1,21):
         uploader_list = []
         for i in range(num):
             uploader = {}
             # if input('vupname(自己设定的vup名称):') == None:
-            #     print('输入不能为空')
+            #     print('1输入不能为空')
             # else:
             print('开始添加新的房间:')
             uploader['vupname'] = input('vupname(自己设定的vup名称):')
@@ -141,10 +143,10 @@ def modify_set():
                 sets[f'{variable}'] = int(input())
             else:
                 sets[f'{variable}'] = input(str(f'将变量{variable}由'+sets[f'{variable}']+'修改为:'))
-        else:
-            print()
-    print('已修改')
-    print(sets)
+                print('已修改')
+                print(sets)
+        # else:
+        #     print()
     dojson.modify_set(sets)
 
     
@@ -159,16 +161,19 @@ def main():
         print('1:增加房间 2:删除房间 3:修改房间 4:修改设置')
         flag = input()
         # print(flag)
-        if flag == '1':
-            add_uploader()
-        elif flag == '2':
-            delete_uploader()
-        elif flag == '3':
-            modify_uploader()
-        elif flag == '4':
-            modify_set()
-        else:
-            print('请输入您想选择对象的数字哟')
+        try:
+            if flag == '1':
+                add_uploader()
+            elif flag == '2':
+                delete_uploader()
+            elif flag == '3':
+                modify_uploader()
+            elif flag == '4':
+                modify_set()
+            else:
+                print('请输入您想选择对象的数字哟')
+        except Exception as e:
+            traceback.print_exc(file=open('./日志/错误日志.log','a',encoding='utf-8'))
 
 if __name__ == '__main__':
     main()

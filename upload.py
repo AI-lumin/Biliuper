@@ -14,7 +14,7 @@ print = reprint.print
 
 #出现login fail, error code = -662，说明账号或密码错误
 #传输过程中请注意保持网络通畅
-#录播姬的命名格式请采用{date}_{name}_{title}f/{date}_{name}_{title}_{time}.flv
+#录播姬的命名格式请采用{date}_{name}_{title}a/{date}_{name}_{title}_{time}.flv
 
 def do_text(filename):
     file_split = filename.split('\\')[-1]
@@ -80,8 +80,8 @@ up_tags,up_copyright,up_tid,up_desc,up_source,up_thread,title):
 def main(vup_name):
     video_path=dojson.get_set()['video_path'] #录播姬的录像文件目录
     backup_path=dojson.get_set()['backup_path'] #上传完后，视频会移动到这个目录
-    uploader_got = dojson.get_uploader(vup_name)
-    # print(uploader_got)
+    # uploader_got = dojson.get_uploader(vup_name)
+    print('upload_got = '+str(uploader_got))
     user_name = str(uploader_got['username'])
     # print(user_name)
     user_password = str(uploader_got['password'])
@@ -113,7 +113,7 @@ def main(vup_name):
     print(time_name)
     text = do_text(files[0])[0]
 
-    if up_title != '':
+    if up_title.isspace() == True or len(up_title) == 0:
         title = '【'+vup_name+'】{} {} 【直播录像】'.format(do_data(time_name),text)
     else:
         title = up_title
@@ -166,6 +166,6 @@ def main(vup_name):
         traceback.print_exc(file=open('./日志/错误日志.log','a',encoding='utf-8'))
 
 if __name__ == '__main__':
-    # vup_name = '浓密仙'
+    vup_name = '点赞仙'
     main(vup_name)
 

@@ -147,9 +147,10 @@ def main():
 
 
 if __name__ == '__main__':
-    print(get_uploader('文静'))
+    # print(get_uploader('文静'))
     # print(get_set())
     main()
 
+# 可以调用函数呀，让别的py文件调用本py文件的函数
 
 
