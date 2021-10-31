@@ -4,6 +4,7 @@
 '''
 
 import dojson
+import os
 
 json_path = ".//setting.json"
 
@@ -17,10 +18,21 @@ def noline_input():
             break
     return long_str
 
+def bool_input():
+    str2 = input()
+    bool2 = True
+    if str2 == '0' or str2 == 'false':
+        bool2 = False
+    return bool2
+
 def add_uploader():
     # print(f'现在有{len(dojson.get_namelist())}个房间')
-    num = int(input('请输入要加入的房间数(不超过20):'))
-    if num<=20:
+    if input('请输入要加入的房间数(不超过20,默认为1):') != None:
+        num = 1
+    else:
+        num = int(input())
+    # print(num)
+    if 1<=num<=20:
         uploader_list = []
         for i in range(num):
             uploader = {}
@@ -31,11 +43,20 @@ def add_uploader():
             uploader['vupname'] = input('vupname(自己设定的vup名称):')
             uploader['username'] = input('username(账号):')
             uploader['password'] = input('password(密码):')
+            uploader['title'] = input('title(标题,已默认设置好)')
             uploader['source'] = input('source(直播间网址):')
             # uploader['desc'] = input('desc(视频简介):')
             print('desc(视频简介,输入0以结束输入):')
             uploader['desc'] = noline_input()
-            
+            print('do_upload(是否上传,默认为true,输入0或false以改为false)')
+            uploader['do_upload'] = bool_input()
+            print('do_remove(是否转移,默认为true,输入0或false以改为false)')
+            uploader['do_remove'] = bool_input()
+
+            if input('upload_way(有1和2两种,默认为2,1现在暂时不可用):') != None:
+                uploader['upload_way'] = 2
+            else:
+                uploader['upload_way'] = input('upload_way:')
             if input('copyright(默认为转载2):') != None:
                 uploader['copyright'] = 2
             else:
@@ -55,6 +76,8 @@ def add_uploader():
             print(uploader)
             uploader_list.append(uploader)
         dojson.add_uploader(uploader_list)
+    elif num <=0:
+        print('这是什么呀,我不认识')
     else:
         print('超过一次性添加房间数限制')
 
@@ -68,6 +91,8 @@ def delete_uploader():
     
 
 def modify_uploader():
+    num_list = ['copyright', 'thread_pool_workers', 'tid', 'upload_way']
+    bool_list = ['do_remove', 'do_upload']
     uploader_list = []
     name_list = input('请选择您要修改的房间名:').split(' ')
     for name in name_list:
@@ -85,8 +110,14 @@ def modify_uploader():
                 if variable in variable_list:
                     print(uploader[f'{variable}'])
                     if variable == 'desc':
-                        print(str(f'将变量{variable}由'+uploader[f'{variable}']+'修改为(输入0以停止输入):'))
+                        print(str(f'将变量{variable}由'+str(uploader[f'{variable}'])+'修改为(输入0以停止输入):'))
                         uploader[f'{variable}'] = noline_input()
+                    elif variable in num_list:
+                        print(str(f'将变量{variable}由'+str(uploader[f'{variable}'])+'修改为:'))
+                        uploader[f'{variable}'] = int(input())
+                    elif variable in bool_list:
+                        print(str(f'将变量{variable}由'+str(uploader[f'{variable}'])+'修改为(有输入为true,什么都不输即为false):'))
+                        uploader[f'{variable}'] = bool(input())
                     else:
                         uploader[f'{variable}'] = input(str(f'将变量{variable}由'+uploader[f'{variable}']+'修改为:'))
             print(uploader)
@@ -94,16 +125,38 @@ def modify_uploader():
             dojson.modify_uploader(uploader_list,name)
 
 def modify_set():
-    set_list = list(dojson.read_set())
-    print('目前变量为(建议打开json手动修改):')
-    print(set_list)
+    num_list = ['delete_time', 'pause_time', 'test_time']
+    sets = dojson.get_set()
+    # print('目前变量为(建议打开json手动修改):')
+    print('当前为')
+    print(sets)
+    set_list = input('请输入您要修改的变量:').split(' ')
+    variable_list = []
+    for key in sets:
+        variable_list.append(key)
+    for variable in set_list:
+        if variable in variable_list:
+            if variable in num_list:
+                print(str(f'将变量{variable}由'+str(sets[f'{variable}'])+'修改为:'))
+                sets[f'{variable}'] = int(input())
+            else:
+                sets[f'{variable}'] = input(str(f'将变量{variable}由'+sets[f'{variable}']+'修改为:'))
+        else:
+            print()
+    print('已修改')
+    print(sets)
+    dojson.modify_set(sets)
+
+    
 
 def main():
+    if not os.path.isfile(json_path):
+       dojson.set_initial()
     while True:
         print(f'现在有{len(dojson.get_namelist())}个房间')
         print(f'分别为:{dojson.get_namelist()}')
         print('请选择您要进行的操作:')
-        print('1:增加房间 2:删除房间 3:修改房间 4:修改设置(没做完)')
+        print('1:增加房间 2:删除房间 3:修改房间 4:修改设置')
         flag = input()
         # print(flag)
         if flag == '1':

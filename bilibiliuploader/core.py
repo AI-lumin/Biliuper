@@ -13,6 +13,10 @@ import base64
 APPKEY = 'aae92bc66f3edfab'
 APPSECRET = 'af125a0d5279fd576c1b4418a3e8276d'
 
+# 如果用网页端呢?
+# APPKEY = 'ae57252b0c09105'
+# APPSECRET = 'c75875c596a69eb55bd119e74b07cfe3'
+
 # upload chunk size = 2MB
 CHUNK_SIZE = 2 * 1024 * 1024
 
