@@ -80,8 +80,8 @@ up_tags,up_copyright,up_tid,up_desc,up_source,up_thread,title):
 def main(vup_name):
     video_path=dojson.get_set()['video_path'] #录播姬的录像文件目录
     backup_path=dojson.get_set()['backup_path'] #上传完后，视频会移动到这个目录
-    # uploader_got = dojson.get_uploader(vup_name)
-    print('upload_got = '+str(uploader_got))
+    uploader_got = dojson.get_uploader(vup_name)
+    # print('upload_got = '+str(uploader_got))
     user_name = str(uploader_got['username'])
     # print(user_name)
     user_password = str(uploader_got['password'])
